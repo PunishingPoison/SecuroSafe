@@ -1,17 +1,14 @@
 <div align="center">
-<img width="1200" height="475" alt="GHBanner" src="https://github.com/user-attachments/assets/0aa67016-6eaf-458a-adb2-6e31a0763ed6" />
+<img width="1898" height="1079" alt="Screenshot 2025-09-13 000223" src="https://github.com/user-attachments/assets/c3411155-2c36-4841-9d69-211dcb3059b5" />
+
 </div>
 
-# Run and deploy your AI Studio app
-
+# Run and deploy the app
 This contains everything you need to run your app locally.
-
-View your app in AI Studio: https://ai.studio/apps/drive/1yKg7jDvXm7dXllJhzvhMHTkctBhBneBE
 
 ## Run Locally
 
 **Prerequisites:**  Node.js
-
 
 1. Install dependencies:
    `npm install`
