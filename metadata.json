@@ -1,0 +1,7 @@
+{
+  "name": "SECURO/SAFE",
+  "description": "An AI-powered web application that analyzes links and text content for potential threats, misinformation, and credibility. It provides users with a detailed report and educational tips to improve digital literacy.",
+  "requestFramePermissions": [
+    "camera"
+  ]
+}

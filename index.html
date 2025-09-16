@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>SECURO/SAFE</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.8.0/mammoth.browser.min.js"></script>
+  <script type="importmap">
+{
+  "imports": {
+    "react/": "https://aistudiocdn.com/react@^19.1.1/",
+    "react": "https://aistudiocdn.com/react@^19.1.1",
+    "react-dom/": "https://aistudiocdn.com/react-dom@^19.1.1/",
+    "@google/genai": "https://aistudiocdn.com/@google/genai@^1.19.0"
+  }
+}
+</script>
+  <script type="module">
+    // pdf.js is an ES module and needs to be handled this way to set up the worker.
+    // It will be available on the window object for our file reader utility.
+    try {
+      const pdfjsLib = await import("https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.4.168/pdf.min.mjs");
+      // This is the recommended way to set the worker source for CDN usage.
+      pdfjsLib.GlobalWorkerOptions.workerSrc = "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.4.168/pdf.worker.min.mjs";
+      window.pdfjsLib = pdfjsLib;
+    } catch (e) {
+      console.error("Failed to load PDF.js library", e);
+    }
+  </script>
+  <style>
+    :root {
+      --bg-color: #0a0f18;
+      --border-color: rgba(0, 255, 255, 0.2);
+      --glow-color: rgba(0, 255, 255, 0.5);
+      --font-family: 'IBM Plex Mono', monospace;
+    }
+    body {
+      background-color: var(--bg-color);
+      font-family: var(--font-family);
+    }
+    
+    #matrix-bg {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -1;
+    }
+
+    @keyframes flicker {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.8; }
+    }
+    .text-glow {
+      text-shadow: 0 0 8px var(--glow-color), 0 0 10px var(--glow-color);
+    }
+    .panel {
+        background-color: rgba(10, 15, 24, 0.8);
+        backdrop-filter: blur(8px);
+        border: 1px solid var(--border-color);
+        box-shadow: inset 0 0 15px rgba(0, 255, 255, 0.1), 0 0 20px rgba(0, 255, 255, 0.1);
+    }
+    
+    .typing-effect {
+      white-space: nowrap;
+      overflow: hidden;
+      border-right: .15em solid #06b6d4;
+      animation: typing 2s steps(30, end) forwards, blink-caret .75s step-end infinite;
+    }
+
+    @keyframes typing {
+      from { width: 0 }
+      to { width: 100% }
+    }
+
+    @keyframes blink-caret {
+      from, to { border-color: transparent }
+      50% { border-color: #06b6d4; }
+    }
+  </style>
+<link rel="stylesheet" href="/index.css">
+</head>
+  <body class="text-slate-200">
+    <canvas id="matrix-bg"></canvas>
+    <div id="root"></div>
+    <script type="module" src="/index.tsx"></script>
+    <script>
+      const canvas = document.getElementById('matrix-bg');
+      const ctx = canvas.getContext('2d');
+
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+
+      const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789アァカサタナハマヤャラワガザダバパイィキシチニヒミリヰギジヂビピウゥクスツヌフムユュルグズブヅプエェケセテネヘメレヱゲゼデベペオォコソトノホモヨョロヲゴゾドボポヴッン";
+      const charArray = chars.split('');
+
+      const fontSize = 16;
+      let columns = canvas.width / fontSize;
+
+      const drops = [];
+      for (let x = 0; x < columns; x++) {
+          drops[x] = 1;
+      }
+
+      const mainColor = '#22d3ee'; // A bright cyan to match the theme (Tailwind cyan-400)
+      const accentColor = '#f0f9ff'; // A very light blue, almost white, for highlights (Tailwind sky-50)
+
+      function draw() {
+          ctx.fillStyle = 'rgba(10, 15, 24, 0.05)';
+          ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+          ctx.font = fontSize + 'px ' + getComputedStyle(document.body).fontFamily;
+
+          for (let i = 0; i < drops.length; i++) {
+              const text = charArray[Math.floor(Math.random() * charArray.length)];
+              
+              // Randomly use a bright accent color for a "glitch" or "highlight" effect
+              if (Math.random() > 0.975) {
+                  ctx.fillStyle = accentColor;
+              } else {
+                  ctx.fillStyle = mainColor;
+              }
+
+              ctx.fillText(text, i * fontSize, drops[i] * fontSize);
+
+              if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) {
+                  drops[i] = 0;
+              }
+
+              drops[i]++;
+          }
+      }
+
+      window.addEventListener('resize', () => {
+          canvas.width = window.innerWidth;
+          canvas.height = window.innerHeight;
+          columns = canvas.width / fontSize;
+          drops.length = 0; // Reset drops array
+          for (let x = 0; x < columns; x++) {
+              drops[x] = 1;
+          }
+      });
+
+      setInterval(draw, 35);
+    </script>
+  </body>
+</html>
