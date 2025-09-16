@@ -17,41 +17,41 @@
     -   Actionable **Educational Tips** to help users identify similar threats in the future.
 -   **Image & Document Intelligence**: Extracts text from various document formats and analyzes images for signs of AI generation or misinformation.
 -   **Session History**: Keeps a log of recent analyses in the browser's local storage for easy review and comparison.
--   **Responsive Design**: A fully responsive interface that works seamlessly across desktop and mobile devices.
--   **Zero-Build Setup**: Runs directly in the browser using modern JavaScript (ES Modules) and CDNs, requiring no complex build tools or installations.
+-   **Component-Based Architecture**: Built with React and TypeScript for a scalable and maintainable codebase.
 
 ## How It Works
 
-The application operates entirely on the client-side, making it fast and easy to deploy.
+The application is built as a modern single-page application (SPA).
 
-1.  **Input**: The user provides content through the text area, a file upload, or by using their device's camera.
-2.  **Classification**: The application first classifies the input type (e.g., URL, Plain Text, Image, PDF Document).
-3.  **Prompt Engineering**: Based on the input type, a highly specific prompt is constructed. This prompt instructs the Gemini model to adopt a specific persona (e.g., "You are a cybersecurity analyst...") and perform a targeted analysis.
-4.  **Structured Output**: The request to the Gemini API includes a strict `responseSchema`. This forces the AI to return its findings in a predictable JSON format, ensuring data consistency and reliability.
-5.  **API Call**: The request is sent to the Google Gemini Pro model (`gemini-2.5-flash`).
-6.  **Rendering**: The front-end receives the structured JSON response, parses it, and dynamically renders the detailed analysis report card and updates the history panel.
+1.  **Input**: The user interacts with the `InputForm` component to provide content via the text area, a file upload, or their device's camera.
+2.  **State Management**: The main `App.tsx` component manages the application's state, including loading status, analysis results, and history.
+3.  **API Service**: When an analysis is triggered, the app calls the `geminiService.ts`. This service classifies the input, constructs a highly specific, persona-driven prompt, and defines a strict JSON schema for the response.
+4.  **AI Analysis**: The service sends the request to the Google Gemini API (`gemini-2.5-flash`), which returns a structured JSON object.
+5.  **Render Results**: The `App` component receives the structured data, updates its state, and renders the `ResultCard` component with the detailed analysis. The `History` component is also updated.
 
 ## Tech Stack
 
--   **Core Language**: JavaScript (ESM)
--   **Markup & Styling**: HTML5, Tailwind CSS
--   **AI Engine**: **Google Gemini API** (`@google/genai`) for all content analysis.
+-   **Core Framework**: **React**
+-   **Language**: **TypeScript**
+-   **Styling**: **Tailwind CSS**
+-   **AI Engine**: **Google Gemini API** (`@google/genai`)
+-   **Build Tool**: Assumes a standard React setup like **Vite** or **Create React App**.
 -   **Client-Side Libraries**:
-    -   **pdf.js**: For parsing and extracting text from PDF files directly in the browser.
+    -   **pdf.js**: For parsing and extracting text from PDF files.
     -   **mammoth.js**: For converting `.docx` files to raw text.
--   **Deployment**: Can be hosted on any static web hosting service (e.g., Vercel, Netlify, GitHub Pages) or run locally.
 
 ---
 
 ## Running the Application Locally
 
-Follow these steps to get SECURO/SAFE running on your local machine.
+Follow these steps to get the project running on your local machine.
 
 ### Prerequisites
 
-1.  **A Modern Web Browser**: Chrome, Firefox, Safari, or Edge.
-2.  **Google Gemini API Key**: You need an API key from [Google AI Studio](https://aistudio.google.com/app/apikey).
-3.  **A Local Web Server**: Since the app uses ES Modules, it must be served over HTTP/HTTPS. A simple way to do this is with Python's built-in server or the `Live Server` extension in VS Code.
+-   **Node.js**: Version 18.x or later.
+-   **npm** or **yarn**: A package manager for Node.js.
+-   **Git**: For cloning the repository.
+-   **Google Gemini API Key**: You must have an active API key from [Google AI Studio](https://aistudio.google.com/app/apikey).
 
 ### Step 1: Clone the Repository
 
@@ -62,53 +62,71 @@ git clone <repository_url>
 cd <repository_folder>
 ```
 
-### Step 2: Configure Your API Key
+### Step 2: Install Dependencies
 
-1.  Open the `index.html` file in a text editor.
-2.  Find the following line (around line 300):
+Install all the required npm packages.
 
-    ```javascript
-    const API_KEY = "YOUR_GEMINI_API_KEY_HERE";
+```bash
+npm install
+# or
+yarn install
+```
+
+### Step 3: Configure Environment Variables
+
+1.  In the root of the project, create a new file named `.env.local`.
+2.  Add your Google Gemini API key to this file. The variable name must match the one used in the code (e.g., `VITE_GEMINI_API_KEY` for a Vite project).
+
+    ```.env.local
+    VITE_GEMINI_API_KEY="YOUR_GEMINI_API_KEY_HERE"
     ```
 
-3.  Replace the placeholder string `"YOUR_GEMINI_API_KEY_HERE"` with your actual Google Gemini API key.
+    > **Important**: This file is included in `.gitignore` by default to prevent you from accidentally committing your secret key.
 
-    ```javascript
-    // IMPORTANT: Replace with your own key
-    const API_KEY = "YOUR_GEMINI_API_KEY_HERE";
-    ```
-    > **Security Note**: This method is suitable for local development only. For a production application, never expose your API key on the client-side. It should be handled through a secure backend server.
+### Step 4: Run the Development Server
 
-### Step 3: Serve the Application
+Start the local development server.
 
-You can use any local web server. The simplest is Python's built-in module.
+```bash
+npm run dev
+# or
+yarn dev
+```
 
-1.  Open your terminal in the project's root directory (the one containing `index.html`).
-2.  Run one of the following commands:
+This will launch the application, typically on `http://localhost:5173` (for Vite) or `http://localhost:3000` (for Create React App). The exact URL will be shown in your terminal.
 
-    **For Python 3:**
-    ```bash
-    python3 -m http.server
-    ```
-    **For Python 2:**
-    ```bash
-    python -m SimpleHTTPServer
-    ```
+### Step 5: Access SECURO/SAFE
 
-3.  The server will start, typically on port `8000`. You'll see a message like `Serving HTTP on 0.0.0.0 port 8000 (http://0.0.0.0:8000/)`.
-
-### Step 4: Access SECURO/SAFE
-
-Open your web browser and navigate to:
-
-[http://localhost:8000](http://localhost:8000)
-
-The application should now be running, and you can start analyzing content!
+Open your web browser and navigate to the URL provided in your terminal. The application should now be running!
 
 ---
 
-## File Structure
+## Project Structure
 
--   `index.html`: The main entry point of the application. It contains all the HTML structure, CSS (via CDN and inline styles), and the core application logic in a `<script type="module">` tag.
--   `metadata.json`: Provides metadata about the application, including required permissions like camera access.
--   `README.md`: This file.
+```
+/
+├── public/                # Static assets (favicon, etc.)
+├── src/
+│   ├── components/        # Reusable React components
+│   │   ├── icons/         # SVG icon components
+│   │   ├── EducationalContent.tsx
+│   │   ├── Header.tsx
+│   │   ├── History.tsx
+│   │   ├── InputForm.tsx
+│   │   └── ResultCard.tsx
+│   │
+│   ├── services/          # API interaction logic
+│   │   └── geminiService.ts
+│   │
+│   ├── App.tsx            # Main application component and state logic
+│   ├── index.css          # Global styles (Tailwind directives)
+│   ├── index.tsx          # Root entry point of the React app
+│   └── types.ts           # TypeScript type definitions
+│
+├── .env.local             # Local environment variables (API Key)
+├── .gitignore             # Files to ignore for version control
+├── index.html             # The HTML template for the SPA
+├── package.json           # Project dependencies and scripts
+├── README.md              # This file
+└── tsconfig.json          # TypeScript compiler options
+```
